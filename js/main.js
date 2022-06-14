@@ -22,6 +22,7 @@ const arrayProductos = [];
 let compro = prompt("Ingrese el nombre del producto o 'FIN' para terminar de agregar");
 if(compro==="FIN"){
     noIngresa();
+    arrayProductos[0]=0;
 }else{
     while(compro!="FIN"){
         let nombreP = compro;
@@ -32,100 +33,132 @@ if(compro==="FIN"){
     }
 }
 
-/* for(let i=0;i<arrayProductos.length;i++){
-    console.log(arrayProductos[i]);
-} */
-
 let producto
 
 //imprimir productos
 for (producto of arrayProductos){
-    console.log("Nombre del producto: " + producto.nombre);
-    console.log("Cantidad: " + producto.cantidad);
-    console.log("Precio: $" + producto.precio);
-    console.log("Precio con IVA: $" + producto.sumarIva());
-    console.log("Precio sugerido: $" + producto.precioSugerido());
+
+    let contenedor=document.createElement("div");
+    contenedor.innerHTML = `<div class="card">
+    <h4>Nombre: ${producto.nombre}</h4>
+    <p>Cantidad: ${producto.cantidad}</p>
+    <p>Precio: $${producto.precio}</p>
+    <p>Precio con IVA: $${producto.sumarIva()}</p>
+    <b>Precio sugerido: $${producto.precioSugerido()}</b>
+    </div>`
+    document.body.appendChild(contenedor);
 }
 
 //poco stock - menos de 2 productos
 const pocoStock = arrayProductos.filter(producto => producto.cantidad<=2);
-console.log("Lista de productos con stock menor a dos unidades:");
-for(producto of pocoStock){
-    console.log(" \nNombre: " + producto.nombre + "\nCantidad: " + producto.cantidad);
+if(pocoStock!=0){
+    let tituloPstock=document.createElement("h4");
+    tituloPstock.innerHTML="<h4>Lista de productos con stock menor a dos unidades:</h4>"
+    document.body.appendChild(tituloPstock);
+    for(producto of pocoStock){
+        let pstock=document.createElement("ul");
+        pstock.innerHTML=`<ul class="lista">
+        <li>Nombre: ${producto.nombre}, Cantidad: ${producto.cantidad}</li>
+        </ul>`
+        document.body.appendChild(pstock);
+    }
 }
+
 
 //sin stock
 const sinStock = arrayProductos.filter(producto => producto.cantidad==0);
-console.log("Lista de productos sin stock:");
-for(producto of sinStock){
-    console.log("\nNombre: " + producto.nombre + "\nCantidad: " + producto.cantidad);
+if(sinStock!=0){
+    let tituloSstock=document.createElement("h4");
+    tituloSstock.innerHTML="<h4>Lista de productos sin stock:</h4>"
+    document.body.appendChild(tituloSstock);
+    for(producto of sinStock){
+        let sstock=document.createElement("ul");
+        sstock.innerHTML=`<ul class="lista">
+        <li>Nombre: ${producto.nombre}, Cantidad: ${producto.cantidad}</li>
+        </ul>`
+        document.body.appendChild(sstock);
+    }
 }
 
 //funcion imprimir
 function imprimir(ordenados){
     for(producto of ordenados){
-        console.log("\nNombre: " + producto.nombre + "\nPrecio: $" + producto.precio + "\nCantidad: " + producto.cantidad);
+        let ordenados = document.createElement("div");
+        ordenados.innerHTML = `<div class="card">
+        <h4>Nombre: ${producto.nombre}</h4>
+        <p>Cantidad: ${producto.cantidad}</p>
+        <p>Precio: $${producto.precio}</p>
+        </div>`
+        document.body.appendChild(ordenados);
         }
 }
 
 const ordenados = arrayProductos.map(el => el);
+let tituloOrdenados;
 
-let opcion = parseInt(prompt("Ingrese una opción:\n1. Ordenar por precio ascendente.\n2. Ordenar por precio descendente.\n3. Ordenar de la A-Z.\n4. Ordenar de la Z-A.\n5. Ordenar por cantidad ascendente.\n6. Ordenar por cantidad descendente."));
+if(arrayProductos[0]!=0){
+    let opcion = parseInt(prompt("Ingrese una opción:\n1. Ordenar por precio ascendente.\n2. Ordenar por precio descendente.\n3. Ordenar de la A-Z.\n4. Ordenar de la Z-A.\n5. Ordenar por cantidad ascendente.\n6. Ordenar por cantidad descendente."));
 
-while(opcion==1||opcion==2||opcion==3||opcion==4||opcion==5||opcion==6){
-    switch(opcion){
-        case 1:
-            console.log("Productos ordenados por Precio Ascendente:");
-            ordenados.sort((a,b)=>a.precio-b.precio);
-            imprimir(ordenados);
-            break;
-        case 2:
-            console.log("Productos ordenados por Precio Descendente:");
-            ordenados.sort((a,b)=>b.precio-a.precio);
-            imprimir(ordenados);
-            break;
-        case 3:
-            console.log("Productos ordenados de la A-Z:");
-            ordenados.sort((a,b)=>{
-                if(a.nombre>b.nombre){
-                    return 1;
-                }
-                if(a.nombre<b.nombre){
-                    return -1;
-                }
-                //a = b
+switch(opcion){
+    case 1:
+        tituloOrdenados=document.createElement("h2");
+        tituloOrdenados.innerHTML=`<h2>Productos ordenados por Precio Ascendente: </h2>`
+        document.body.append(tituloOrdenados);
+        ordenados.sort((a,b)=>a.precio-b.precio);
+        imprimir(ordenados);
+        break;
+    case 2:
+        tituloOrdenados=document.createElement("h2");
+        tituloOrdenados.innerHTML=`<h2>Productos ordenados por Precio Descendente: </h2>`
+        document.body.append(tituloOrdenados);
+        ordenados.sort((a,b)=>b.precio-a.precio);
+        imprimir(ordenados);
+        break;
+    case 3:
+        tituloOrdenados=document.createElement("h2");
+        tituloOrdenados.innerHTML=`<h2>Productos en orden alfabético: </h2>`
+        document.body.append(tituloOrdenados);
+        ordenados.sort((a,b)=>{
+            if(a.nombre>b.nombre){
+                return 1;
+            }
+            if(a.nombre<b.nombre){
+                return -1;
+            }
+            //a = b
                 return 0;
-            });
-            imprimir(ordenados);
-            break;
-        case 4:
-            console.log("Productos ordenados de la Z-A:");
-            ordenados.sort((a,b)=>{
-                if(a.nombre<b.nombre){
-                    return 1;
-                }
-                if(a.nombre>b.nombre){
-                    return -1;
-                }
-                //a = b
-                return 0;
-            });
-            imprimir(ordenados);
-            break;
-        case 5:
-            console.log("Productos ordenados por Cantidad Ascendente:");
-            ordenados.sort((a,b)=>a.cantidad-b.cantidad);
-            imprimir(ordenados);
-            break;
-        case 6:
-            console.log("Productos ordenados por Cantidad Descendente:");
-            ordenados.sort((a,b)=>b.cantidad-a.cantidad);
-            imprimir(ordenados);
-            break;
-    }
-    opcion = parseInt(prompt("Ingrese una opción:\n1. Ordenar por precio ascendente.\n2. Ordenar por precio descendente.\n3. Ordenar de la A-Z.\n4. Ordenar de la Z-A.\n5. Ordenar por cantidad ascendente.\n6. Ordenar por cantidad descendente."));
+        });
+        imprimir(ordenados);
+        break;
+    case 4:
+        tituloOrdenados=document.createElement("h2");
+        tituloOrdenados.innerHTML=`<h2>Productos de la Z-A: </h2>`
+        document.body.append(tituloOrdenados);
+        ordenados.sort((a,b)=>{
+            if(a.nombre<b.nombre){
+                return 1;
+            }
+            if(a.nombre>b.nombre){
+                return -1;
+            }
+            //a = b
+            return 0;
+        });
+        imprimir(ordenados);
+        break;
+    case 5:
+        tituloOrdenados=document.createElement("h2");
+        tituloOrdenados.innerHTML=`<h2>Productos ordenados por Cantidad Ascendente: </h2>`
+        ordenados.sort((a,b)=>a.cantidad-b.cantidad);
+        imprimir(ordenados);
+        break;
+    case 6:
+        tituloOrdenados=document.createElement("h2");
+        tituloOrdenados.innerHTML=`<h2>Productos ordenador por Cantidad Descendente: </h2>`
+        ordenados.sort((a,b)=>b.cantidad-a.cantidad);
+        imprimir(ordenados);
+        break;
 }
-
-
+}  
 
 
